@@ -1,0 +1,24 @@
+{
+  "name": "better-sgf",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@iconify/json": "^2.1.50",
+    "@svgr/core": "^6.2.1",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@vitejs/plugin-react": "^1.3.0",
+    "unplugin-icons": "^0.14.3",
+    "vite": "^2.9.9",
+    "vite-plugin-pwa": "^0.12.0"
+  }
+}
