@@ -58,6 +58,36 @@ function App() {
     });
   }
 
+  function sortEventsByGenre(events) {
+    return events.sort((a, b) => {
+      let genreA = a.genre.toLowerCase();
+      let genreB = b.genre.toLowerCase();
+
+      if (genreA < genreB) {
+        return -1;
+      }
+      if (genreA > genreB) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+
+  function sortEventsByStage(events) {
+    return events.sort((a, b) => {
+      let stageA = a.location.toLowerCase();
+      let stageB = b.location.toLowerCase();
+
+      if (stageA < stageB) {
+        return -1;
+      }
+      if (stageA > stageB) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+
   function handleStageChange(event) {
     if (event.target.checked) {
       setSelectedStages([...selectedStages, event.target.value]);
@@ -100,9 +130,14 @@ function App() {
 
     if (searchKeyword.length > 0) {
       e = eventsRaw.filter((event) => {
-        return event.title
-          .toLowerCase()
-          .includes(searchKeyword.toLocaleLowerCase());
+        return (
+          event.title
+            .toLowerCase()
+            .includes(searchKeyword.toLocaleLowerCase()) ||
+          event.description
+            .toLowerCase()
+            .includes(searchKeyword.toLocaleLowerCase())
+        );
       });
     }
 
@@ -116,6 +151,10 @@ function App() {
 
     if (sortType == "START") {
       setEvents(sortEventsByDate(e));
+    } else if (sortType == "GENRE") {
+      setEvents(sortEventsByGenre(e));
+    } else if (sortType == "STAGE") {
+      setEvents(sortEventsByStage(e));
     } else {
       setEvents(sortEventsByArtistName(e));
     }
@@ -149,50 +188,55 @@ function App() {
               display: showSettings ? "block" : "none",
             }}
           >
-            <p>Genres</p>
-            {genres.map((genre) => (
-              <div key={genre.name}>
-                <label class="checkbox-container" for={genre.name}>
-                  {genre.name}
-                  <input
-                    type="checkbox"
-                    id={genre.name}
-                    name="genres"
-                    value={genre.name}
-                    onChange={(e) => {
-                      handleGenreChanged(e);
-                    }}
-                    defaultChecked={selectedGenres.includes(genre.name)}
-                  ></input>
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-            ))}
-            <p>Bühnen</p>
-            {stages.map((stage) => (
-              <div key={stage}>
-                <label class="checkbox-container" for={stage}>
-                  {stage}
-                  <input
-                    type="checkbox"
-                    id={stage}
-                    name="genres"
-                    value={stage}
-                    onChange={(e) => {
-                      handleStageChange(e);
-                    }}
-                    defaultChecked={selectedStages.includes(stage)}
-                  ></input>
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-            ))}
-            <p>
-              Strart{" "}
+            <span className="settings-title">Genres</span>
+            <div className="settings-row">
+              {genres.map((genre) => (
+                <div key={genre.name} className="settings-row__item">
+                  <label class="checkbox-container" for={genre.name}>
+                    {genre.name}
+                    <input
+                      type="checkbox"
+                      id={genre.name}
+                      name="genres"
+                      value={genre.name}
+                      onChange={(e) => {
+                        handleGenreChanged(e);
+                      }}
+                      defaultChecked={selectedGenres.includes(genre.name)}
+                    ></input>
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+              ))}
+            </div>
+            <span className="settings-title">Bühnen</span>
+            <div className="settings-row">
+              {stages.map((stage) => (
+                <div key={stage} className="settings-row__item">
+                  <label class="checkbox-container" for={stage}>
+                    {stage}
+                    <input
+                      type="checkbox"
+                      id={stage}
+                      name="genres"
+                      value={stage}
+                      onChange={(e) => {
+                        handleStageChange(e);
+                      }}
+                      defaultChecked={selectedStages.includes(stage)}
+                    ></input>
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+              ))}
+            </div>
+            <span className="settings-title">Startdatum</span>
+            <div className="settings-row">
               <input
                 type="datetime-local"
                 id="meeting-time"
                 name="meeting-time"
+                className="settings-row__item"
                 ref={dateRef}
                 defaultValue={startDate.toISOString().slice(0, 16)}
                 min={new Date(eventsRaw[0].start).toISOString().slice(0, 16)}
@@ -201,19 +245,57 @@ function App() {
                   .slice(0, 16)}
               ></input>
               <button
+                className="settings-row__item"
                 onClick={() => setStartDate(new Date(dateRef.current.value))}
               >
                 Datum festlegen
               </button>
-              <button onClick={() => setStartDate(new Date())}>Jetzt</button>
-            </p>
-            <div>
-              <button onClick={() => setSortType("NAME")}>Name</button>
-              <button onClick={() => setSortType("START")}>Start</button>
+              <button
+                className="settings-row__item"
+                onClick={() => setStartDate(new Date())}
+              >
+                Jetzt
+              </button>
             </div>
+            <span className="settings-title">Sortierung</span>
+            <div className="settings-row">
+              <button
+                className={
+                  "settings-row__item" + (sortType == "NAME" ? " active" : "")
+                }
+                onClick={() => setSortType("NAME")}
+              >
+                Name
+              </button>
+              <button
+                className={
+                  "settings-row__item" + (sortType == "START" ? " active" : "")
+                }
+                onClick={() => setSortType("START")}
+              >
+                Start
+              </button>
+              <button
+                className={
+                  "settings-row__item" + (sortType == "GENRE" ? " active" : "")
+                }
+                onClick={() => setSortType("GENRE")}
+              >
+                Genre
+              </button>
+              <button
+                className={
+                  "settings-row__item" + (sortType == "STAGE" ? " active" : "")
+                }
+                onClick={() => setSortType("STAGE")}
+              >
+                Bühne
+              </button>
+            </div>
+            <span className="settings-title">Suche</span>
             <input
               type="text"
-              className="header__search"
+              className="header__search settings-row settings-row__item"
               placeholder="Search"
               onChange={(e) => {
                 setSearchKeyword(e.target.value);
