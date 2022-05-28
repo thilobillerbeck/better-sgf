@@ -21,8 +21,8 @@ export default defineConfig({
         short_name: "BetterSGF",
         description:
           "Eine inoffizielle Companion App für das Schlossgrabenfest",
-        theme_color: "#f69435",
-        background_color: "#f69435",
+        theme_color: "#000000",
+        background_color: "#000000",
         display: "standalone",
         scope: "/",
         start_url: "/",
