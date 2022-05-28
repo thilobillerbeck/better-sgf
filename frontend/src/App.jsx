@@ -136,7 +136,7 @@ function App() {
     return (
       <div className="App">
         <header>
-          <div className="header__bar">
+          <div className="header__bar container">
             <div className="header-brand">
               <img className="header__logo" src="/favicon.svg" />
               <h1 className="header__title">BetterSGF</h1>
@@ -149,127 +149,142 @@ function App() {
             </button>
           </div>
           <div
-            className="header__settings"
+            className="header__settings container"
             style={{
               display: showSettings ? "block" : "none",
             }}
           >
-            <span className="settings-title">Genres</span>
-            <div className="settings-row">
-              {genres.map((genre) => (
-                <div key={genre.name} className="settings-row__item">
-                  <label class="checkbox-container" for={genre.name}>
-                    {genre.name}
-                    <input
-                      type="checkbox"
-                      id={genre.name}
-                      name="genres"
-                      value={genre.name}
-                      onChange={(e) => {
-                        handleGenreChanged(e);
-                      }}
-                      defaultChecked={selectedGenres.includes(genre.name)}
-                    ></input>
-                    <span class="checkmark"></span>
-                  </label>
-                </div>
-              ))}
+            <div className="settings-container">
+              <span className="settings-title">Genres</span>
+              <div className="settings-row">
+                {genres.map((genre) => (
+                  <div key={genre.name} className="settings-row__item">
+                    <label class="checkbox-container" for={genre.name}>
+                      {genre.name}
+                      <input
+                        type="checkbox"
+                        id={genre.name}
+                        name="genres"
+                        value={genre.name}
+                        onChange={(e) => {
+                          handleGenreChanged(e);
+                        }}
+                        defaultChecked={selectedGenres.includes(genre.name)}
+                      ></input>
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                ))}
+              </div>
             </div>
-            <span className="settings-title">Bühnen</span>
-            <div className="settings-row">
-              {stages.map((stage) => (
-                <div key={stage} className="settings-row__item">
-                  <label class="checkbox-container" for={stage}>
-                    {stage}
-                    <input
-                      type="checkbox"
-                      id={stage}
-                      name="genres"
-                      value={stage}
-                      onChange={(e) => {
-                        handleStageChange(e);
-                      }}
-                      defaultChecked={selectedStages.includes(stage)}
-                    ></input>
-                    <span class="checkmark"></span>
-                  </label>
-                </div>
-              ))}
+            <div className="settings-container">
+              <span className="settings-title">Bühnen</span>
+              <div className="settings-row">
+                {stages.map((stage) => (
+                  <div key={stage} className="settings-row__item">
+                    <label class="checkbox-container" for={stage}>
+                      {stage}
+                      <input
+                        type="checkbox"
+                        id={stage}
+                        name="genres"
+                        value={stage}
+                        onChange={(e) => {
+                          handleStageChange(e);
+                        }}
+                        defaultChecked={selectedStages.includes(stage)}
+                      ></input>
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                ))}
+              </div>
             </div>
-            <span className="settings-title">Startdatum</span>
-            <div className="settings-row">
-              <input
-                type="datetime-local"
-                id="meeting-time"
-                name="meeting-time"
-                className="settings-row__item"
-                ref={dateRef}
-                defaultValue={startDate.toISOString().slice(0, 16)}
-                min={new Date(eventsRaw[0].start).toISOString().slice(0, 16)}
-                max={new Date(eventsRaw[eventsRaw.length - 1].start)
-                  .toISOString()
-                  .slice(0, 16)}
-              ></input>
-              <button
-                className="settings-row__item"
-                onClick={() => setStartDate(new Date(dateRef.current.value))}
-              >
-                Datum festlegen
-              </button>
-              <button
-                className="settings-row__item"
-                onClick={() => setStartDate(new Date())}
-              >
-                Jetzt
-              </button>
+            <div className="settings-container">
+              <span className="settings-title">Startdatum</span>
+              <div className="settings-row">
+                <button
+                  className="settings-row__item"
+                  onClick={() => setStartDate(new Date())}
+                >
+                  Jetzt
+                </button>
+                <input
+                  type="datetime-local"
+                  id="meeting-time"
+                  name="meeting-time"
+                  className="settings-row__item"
+                  ref={dateRef}
+                  defaultValue={startDate.toISOString().slice(0, 16)}
+                  min={new Date(eventsRaw[0].start).toISOString().slice(0, 16)}
+                  max={new Date(eventsRaw[eventsRaw.length - 1].start)
+                    .toISOString()
+                    .slice(0, 16)}
+                ></input>
+                <button
+                  className="settings-row__item"
+                  onClick={() => setStartDate(new Date(dateRef.current.value))}
+                >
+                  OK
+                </button>
+              </div>
             </div>
-            <span className="settings-title">Sortierung</span>
-            <div className="settings-row">
-              <button
-                className={
-                  "settings-row__item" + (sortType == "NAME" ? " active" : "")
-                }
-                onClick={() => setSortType("NAME")}
-              >
-                Name
-              </button>
-              <button
-                className={
-                  "settings-row__item" + (sortType == "START" ? " active" : "")
-                }
-                onClick={() => setSortType("START")}
-              >
-                Start
-              </button>
-              <button
-                className={
-                  "settings-row__item" + (sortType == "GENRE" ? " active" : "")
-                }
-                onClick={() => setSortType("GENRE")}
-              >
-                Genre
-              </button>
-              <button
-                className={
-                  "settings-row__item" + (sortType == "STAGE" ? " active" : "")
-                }
-                onClick={() => setSortType("STAGE")}
-              >
-                Bühne
-              </button>
+            <div className="settings-container">
+              <span className="settings-title">Sortierung</span>
+              <div className="settings-row">
+                <button
+                  className={
+                    "settings-row__item" + (sortType == "NAME" ? " active" : "")
+                  }
+                  onClick={() => setSortType("NAME")}
+                >
+                  Name
+                </button>
+                <button
+                  className={
+                    "settings-row__item" +
+                    (sortType == "START" ? " active" : "")
+                  }
+                  onClick={() => setSortType("START")}
+                >
+                  Start
+                </button>
+                <button
+                  className={
+                    "settings-row__item" +
+                    (sortType == "GENRE" ? " active" : "")
+                  }
+                  onClick={() => setSortType("GENRE")}
+                >
+                  Genre
+                </button>
+                <button
+                  className={
+                    "settings-row__item" +
+                    (sortType == "STAGE" ? " active" : "")
+                  }
+                  onClick={() => setSortType("STAGE")}
+                >
+                  Bühne
+                </button>
+              </div>
             </div>
-            <span className="settings-title">Suche</span>
-            <input
-              type="text"
-              className="header__search settings-row settings-row__item"
-              placeholder="Search"
-              onChange={(e) => {
-                setSearchKeyword(e.target.value);
-              }}
-            />
+            <div className="settings-container">
+              <span className="settings-title">Suche</span>
+              <div className="settings-row">
+                <input
+                  type="text"
+                  className="header__search settings-row__item"
+                  placeholder="Search"
+                  onChange={(e) => {
+                    setSearchKeyword(e.target.value);
+                  }}
+                />
+              </div>
+            </div>
           </div>
         </header>
-        <ul className="eventlist">
+        <ul className="eventlist container">
           {events.map((event) => {
             let start = new Date(event.start);
             let end = new Date(event.end);
