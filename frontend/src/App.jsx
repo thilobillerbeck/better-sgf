@@ -19,7 +19,7 @@ function App() {
   const dateRef = useRef(null);
 
   function updateData() {
-    fetch("https://bespoke-mermaid-93ec9f.netlify.app/events.json")
+    fetch("https://api.better-sgf.de/events.json")
       .then((response) => response.json())
       .then((data) => {
         localStorage.setItem("data", JSON.stringify(data));
