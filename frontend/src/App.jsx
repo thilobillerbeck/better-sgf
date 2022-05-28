@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import MusicIcon from "~icons/mdi/music";
 import MarkerIcon from "~icons/mdi/map-marker-radius";
+import { useRegisterSW } from "virtual:pwa-register/react";
 import "./App.css";
 
 function App() {
@@ -17,6 +18,19 @@ function App() {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const dateRef = useRef(null);
+  const {
+    offlineReady: [offlineReady, setOfflineReady],
+    needRefresh: [needRefresh, setNeedRefresh],
+    updateServiceWorker,
+  } = useRegisterSW({
+    onRegistered(r) {
+      // eslint-disable-next-line prefer-template
+      console.log("SW Registered: " + r);
+    },
+    onRegisterError(error) {
+      console.log("SW registration error", error);
+    },
+  });
 
   function updateData() {
     fetch("https://api.better-sgf.de/events.json")
