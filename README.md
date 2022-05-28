@@ -4,7 +4,7 @@
 
 # BetterSGF
 
-**DISCLAIMER:** Yes, I know the code has a lot of room for improvements, it was not written in mind of being shared with others and will be improved over time
+**DISCLAIMER:** Yes, I know the code has a lot of room for improvements, it was not written in mind of being shared with others and will be improved over time.
 
 ## Why did I built this?
 

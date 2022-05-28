@@ -2,6 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import MusicIcon from "~icons/mdi/music";
 import MarkerIcon from "~icons/mdi/map-marker-radius";
 import { useRegisterSW } from "virtual:pwa-register/react";
+import {
+  sortEventsByDate,
+  sortEventsByArtistName,
+  sortEventsByGenre,
+  sortEventsByStage,
+} from "./helpers";
 import "./App.css";
 
 function App() {
@@ -38,68 +44,8 @@ function App() {
       .then((data) => {
         localStorage.setItem("data", JSON.stringify(data));
         localStorage.setItem("data_last-update", Date.now());
-        setEventsRaw(data.events);
-        setGenres(data.genres);
-        setStages(data.stages);
-
-        setSelectedGenres(data.genres.map((genre) => genre.name));
-        setSelectedStages(data.stages);
-        setLoading(false);
+        applyUpdatedData(data);
       });
-  }
-
-  function sortEventsByDate(events) {
-    return events.sort((a, b) => {
-      let startA = new Date(a.start);
-      let startB = new Date(b.start);
-
-      return startA - startB;
-    });
-  }
-
-  function sortEventsByArtistName(events) {
-    return events.sort((a, b) => {
-      let artistA = a.title.toLowerCase();
-      let artistB = b.title.toLowerCase();
-
-      if (artistA < artistB) {
-        return -1;
-      }
-      if (artistA > artistB) {
-        return 1;
-      }
-      return 0;
-    });
-  }
-
-  function sortEventsByGenre(events) {
-    return events.sort((a, b) => {
-      let genreA = a.genre.toLowerCase();
-      let genreB = b.genre.toLowerCase();
-
-      if (genreA < genreB) {
-        return -1;
-      }
-      if (genreA > genreB) {
-        return 1;
-      }
-      return 0;
-    });
-  }
-
-  function sortEventsByStage(events) {
-    return events.sort((a, b) => {
-      let stageA = a.location.toLowerCase();
-      let stageB = b.location.toLowerCase();
-
-      if (stageA < stageB) {
-        return -1;
-      }
-      if (stageA > stageB) {
-        return 1;
-      }
-      return 0;
-    });
   }
 
   function handleStageChange(event) {
@@ -122,18 +68,21 @@ function App() {
     }
   }
 
+  function applyUpdatedData(data) {
+    setEventsRaw(data.events);
+    setGenres(data.genres);
+    setStages(data.stages);
+
+    setSelectedGenres(data.genres.map((genre) => genre.name));
+    setSelectedStages(data.stages);
+    setLoading(false);
+  }
+
   useEffect(() => {
     if (localStorage.getItem("data") !== null) {
       console.log("Loading events from local storage");
       let data = JSON.parse(localStorage.getItem("data"));
-
-      setEventsRaw(data.events);
-      setGenres(data.genres);
-      setStages(data.stages);
-
-      setSelectedGenres(data.genres.map((genre) => genre.name));
-      setSelectedStages(data.stages);
-      setLoading(false);
+      applyUpdatedData(data);
     }
 
     updateData();

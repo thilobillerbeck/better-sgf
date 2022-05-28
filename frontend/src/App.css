@@ -1,12 +1,12 @@
 ::selection {
-  background: rgb(232, 213, 0);
-  color: black;
+  background: var(--primary);
+  color: var(--black);
 }
 
 header {
   max-width: 100vw;
   padding: 0.5rem 0;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--gray);
 }
 
 .header__bar {
@@ -16,7 +16,7 @@ header {
 }
 
 .header__title {
-  color: white;
+  color: var(--white);
   font-size: 1.5rem;
   font-weight: bold;
   margin: 0;
@@ -24,14 +24,14 @@ header {
 }
 
 .event {
-  background-color: rgb(48, 48, 48);
+  background-color: var(--gray);
   list-style-type: none;
   margin: 0;
   margin-bottom: 0.5rem;
 }
 
 .event__title {
-  color: rgb(232, 213, 0);
+  color: var(--primary);
   grid-area: 1 / 3 / 2 / 4;
   font-size: 1rem;
   padding-left: 0.5rem;
@@ -40,8 +40,8 @@ header {
 
 .event__date {
   grid-area: 1 / 1 / 2 / 2;
-  background-color: rgb(48, 48, 48);
-  color: white;
+  background-color: var(--gray-dark);
+  color: var(--white);
   font-weight: bold;
   padding: 0.5rem;
   margin: 0;
@@ -50,13 +50,13 @@ header {
 .event__time {
   grid-area: 1 / 2 / 2 / 3;
   padding: 0.5rem;
-  background-color: rgb(58, 58, 58);
-  color: white;
+  background-color: var(--gray-dark);
+  color: var(--white);
 }
 
 .event__header {
   display: grid;
-  grid-template-columns: repeat(2, max-content) auto;
+  grid-template-columns: max-content minmax(max-content, 11rem) auto;
   grid-template-rows: repeat(3, 1fr);
   grid-column-gap: 0px;
   grid-row-gap: 0px;
@@ -65,19 +65,23 @@ header {
 }
 
 .event__genre {
+  background-color: var(--gray-dark);
   grid-area: 2 / 1 / 3 / 3;
   padding: 0.5rem;
   display: flex;
   flex-flow: row;
   align-items: center;
+  gap: 1rem;
 }
 
 .event__location {
+  background-color: var(--gray-dark);
   grid-area: 3 / 1 / 4 / 3;
   padding: 0.5rem;
   display: flex;
   flex-flow: row;
   align-items: center;
+  gap: 1rem;
 }
 
 .event__description {
@@ -121,44 +125,40 @@ header {
 input {
   margin: 0;
   padding: 0.25rem;
-  border: 1px rgb(232, 213, 0) solid;
+  border: 1px var(--primary) solid;
   background-color: transparent;
-  color: white;
+  color: var(--white);
   font-size: 1rem;
 }
 
 .settings-row {
   display: flex;
   flex-flow: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  width: max-content;
   flex-wrap: wrap;
-  max-width: calc(100% - 5rem);
+  max-width: calc(100%);
   padding: 0.5rem 0;
-}
-
-.settings-row__item {
-  margin-right: 0.5rem;
+  gap: 0.5rem;
 }
 
 .settings-title {
-  color: yellow;
+  color: var(--primary);
   font-weight: bold;
 }
 
 button {
-  border: 1px solid rgb(232, 213, 0);
+  border: 1px solid var(--primary);
   background-color: transparent;
-  color: rgb(232, 213, 0);
+  color: var(--primary);
   padding: 0.5rem;
   font-size: 1rem;
   cursor: pointer;
 }
 
 button.active {
-  background-color: rgb(232, 213, 0);
-  color: black;
+  background-color: var(--primary);
+  color: var(--black);
 }
 
 .App {
@@ -176,6 +176,7 @@ button.active {
 .checkbox-container {
   display: block;
   position: relative;
+  padding-top: 0.25rem;
   padding-left: 2rem;
   margin-bottom: 1rem;
   cursor: pointer;
@@ -203,7 +204,7 @@ button.active {
   height: 1.5rem;
   width: 1.5rem;
   background-color: transparent;
-  border: 1px solid rgb(232, 213, 0);
+  border: 1px solid var(--primary);
 }
 
 /* On mouse-over, add a grey background color */
@@ -213,7 +214,7 @@ button.active {
 
 /* When the checkbox is checked, add a blue background */
 .checkbox-container input:checked ~ .checkmark {
-  background-color: rgb(232, 213, 0);
+  background-color: var(--primary);
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
@@ -234,7 +235,7 @@ button.active {
   top: 0.4rem;
   width: 0.25rem;
   height: 0.5rem;
-  border: solid black;
+  border: solid var(--black);
   border-width: 0 3px 3px 0;
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
