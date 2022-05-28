@@ -71,7 +71,7 @@ header {
 
 .event__header {
   display: grid;
-  grid-template-columns: max-content minmax(max-content, 11rem) auto;
+  grid-template-columns: max-content minmax(max-content, 12rem) auto;
   grid-template-rows: repeat(3, 1fr);
   grid-column-gap: 0px;
   grid-row-gap: 0px;
@@ -269,4 +269,24 @@ button.active {
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #6c6c6c;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #d6d6d6;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #bababa;
 }

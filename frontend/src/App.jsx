@@ -138,7 +138,11 @@ function App() {
         <header>
           <div className="header__bar container">
             <div className="header-brand">
-              <img className="header__logo" src="/favicon.svg" />
+              <img
+                alt="BetterSGF Logo"
+                className="header__logo"
+                src="/favicon.svg"
+              />
               <h1 className="header__title">BetterSGF</h1>
             </div>
             <button
@@ -302,7 +306,7 @@ function App() {
                       hour: "2-digit",
                       minute: "2-digit",
                     })}{" "}
-                    -
+                    -{" "}
                     {end.toLocaleTimeString([], {
                       hour: "2-digit",
                       minute: "2-digit",
