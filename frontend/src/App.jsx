@@ -137,7 +137,10 @@ function App() {
       <div className="App">
         <header>
           <div className="header__bar">
-            <h1 className="header__title">BetterSGF</h1>
+            <div className="header-brand">
+              <img className="header__logo" src="/favicon.svg" />
+              <h1 className="header__title">BetterSGF</h1>
+            </div>
             <button
               className="header__button"
               onClick={() => setShowSettings(!showSettings)}

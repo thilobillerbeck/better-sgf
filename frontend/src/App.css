@@ -23,6 +23,16 @@ header {
   padding: 0.5rem 0;
 }
 
+.header__logo {
+  height: 2rem;
+  margin-right: 0.5rem;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+}
+
 .event {
   background-color: var(--gray);
   list-style-type: none;
