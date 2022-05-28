@@ -9,6 +9,10 @@ export default defineConfig({
     react(),
     Icons({ compiler: "jsx", jsx: "react" }),
     VitePWA({
+      workbox: {
+        cleanupOutdatedCaches: false,
+        sourcemap: true,
+      },
       mode: "development",
       base: "/",
       includeAssets: ["favicon.svg"],
@@ -24,12 +28,12 @@ export default defineConfig({
         start_url: "/",
         icons: [
           {
-            src: "android-chrome-192x192.png", // <== don't add slash, for testing
+            src: "/android-chrome-192x192.png",
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: "/android-chrome-512x512.png", // <== don't remove slash, for testing
+            src: "/android-chrome-512x512.png",
             sizes: "512x512",
             type: "image/png",
           },
