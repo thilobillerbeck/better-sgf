@@ -3,9 +3,10 @@
 </p>
 
 <p align="center">
-  <a href="https://better-sgf.de"  target=”_blank” rel=”noopener noreferrer”>App</a> -
-  <a href="https://api.better-sgf.de/events.json"  target=”_blank” rel=”noopener noreferrer”>Data</a>
+  <a href="https://better-sgf.de" target=”_blank” rel=”noopener noreferrer”>App</a> -
+  <a href="https://api.better-sgf.de/events.json" target=”_blank” rel=”noopener noreferrer”>Data</a>
 </p>
+
 # BetterSGF
 
 **DISCLAIMER:** Yes, I know the code has a lot of room for improvements, it was not written in mind of being shared with others and will be improved over time.
