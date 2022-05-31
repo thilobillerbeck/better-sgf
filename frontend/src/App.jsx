@@ -1,6 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import MusicIcon from "~icons/mdi/music";
-import MarkerIcon from "~icons/mdi/map-marker-radius";
 import { useRegisterSW } from "virtual:pwa-register/react";
 import {
   sortEventsByDate,
@@ -9,20 +7,27 @@ import {
   sortEventsByStage,
 } from "./helpers";
 import "./App.css";
+import ListItem from "./ListItem";
 
 function App() {
   const [eventsRaw, setEventsRaw] = useState([]);
   const [events, setEvents] = useState([]);
   const [genres, setGenres] = useState([]);
   const [stages, setStages] = useState([]);
-  const [selectedGenres, setSelectedGenres] = useState([]);
-  const [selectedStages, setSelectedStages] = useState([]);
-  const [sortType, setSortType] = useState("START");
-  const [searchKeyword, setSearchKeyword] = useState("");
   const [loading, setLoading] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
-  const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+
+  const [settings, setSettings] = useState({
+    selectedGenres: [],
+    selectedStages: [],
+    sortType: "START",
+    searchKeyword: "",
+    startDate: new Date(),
+    endDate: new Date(),
+  });
+  const [data, setData] = useState({});
+
   const dateRef = useRef(null);
   const {
     offlineReady: [offlineReady, setOfflineReady],
@@ -50,21 +55,33 @@ function App() {
 
   function handleStageChange(event) {
     if (event.target.checked) {
-      setSelectedStages([...selectedStages, event.target.value]);
+      setSettings({
+        ...settings,
+        selectedStages: [...settings.selectedStages, event.target.value],
+      });
     } else {
-      setSelectedStages(
-        selectedStages.filter((stage) => stage !== event.target.value)
-      );
+      setSettings({
+        ...settings,
+        selectedStages: settings.selectedStages.filter(
+          (stage) => stage !== event.target.value
+        ),
+      });
     }
   }
 
   function handleGenreChanged(event) {
     if (event.target.checked) {
-      setSelectedGenres([...selectedGenres, event.target.value]);
+      setSettings({
+        ...settings,
+        selectedGenres: [...settings.selectedGenres, event.target.value],
+      });
     } else {
-      setSelectedGenres(
-        selectedGenres.filter((genre) => genre !== event.target.value)
-      );
+      setSettings({
+        ...settings,
+        selectedGenres: settings.selectedGenres.filter(
+          (genre) => genre !== event.target.value
+        ),
+      });
     }
   }
 
@@ -73,8 +90,11 @@ function App() {
     setGenres(data.genres);
     setStages(data.stages);
 
-    setSelectedGenres(data.genres.map((genre) => genre.name));
-    setSelectedStages(data.stages);
+    setSettings({
+      ...settings,
+      selectedGenres: data.genres.map((genre) => genre.name),
+      selectedStages: data.stages,
+    });
     setLoading(false);
   }
 
@@ -91,44 +111,37 @@ function App() {
   useEffect(() => {
     let e = eventsRaw;
 
-    if (searchKeyword.length > 0) {
+    if (settings.searchKeyword.length > 0) {
       e = eventsRaw.filter((event) => {
         return (
           event.title
             .toLowerCase()
-            .includes(searchKeyword.toLocaleLowerCase()) ||
+            .includes(settings.searchKeyword.toLocaleLowerCase()) ||
           event.description
             .toLowerCase()
-            .includes(searchKeyword.toLocaleLowerCase())
+            .includes(settings.searchKeyword.toLocaleLowerCase())
         );
       });
     }
 
     e = e.filter((event) => {
       return (
-        selectedStages.includes(event.location) &&
-        selectedGenres.includes(event.genre) &&
-        new Date(event.start) >= startDate
+        settings.selectedStages.includes(event.location) &&
+        settings.selectedGenres.includes(event.genre) &&
+        new Date(event.start) >= settings.startDate
       );
     });
 
-    if (sortType == "START") {
+    if (settings.sortType === "START") {
       setEvents(sortEventsByDate(e));
-    } else if (sortType == "GENRE") {
+    } else if (settings.sortType === "GENRE") {
       setEvents(sortEventsByGenre(e));
-    } else if (sortType == "STAGE") {
+    } else if (settings.sortType === "STAGE") {
       setEvents(sortEventsByStage(e));
     } else {
       setEvents(sortEventsByArtistName(e));
     }
-  }, [
-    sortType,
-    eventsRaw,
-    searchKeyword,
-    selectedGenres,
-    selectedStages,
-    startDate,
-  ]);
+  }, [settings]);
 
   if (loading) {
     return <p>Loading...</p>;
@@ -173,7 +186,9 @@ function App() {
                         onChange={(e) => {
                           handleGenreChanged(e);
                         }}
-                        defaultChecked={selectedGenres.includes(genre.name)}
+                        defaultChecked={settings.selectedGenres.includes(
+                          genre.name
+                        )}
                       ></input>
                       <span class="checkmark"></span>
                     </label>
@@ -196,7 +211,7 @@ function App() {
                         onChange={(e) => {
                           handleStageChange(e);
                         }}
-                        defaultChecked={selectedStages.includes(stage)}
+                        defaultChecked={settings.selectedStages.includes(stage)}
                       ></input>
                       <span class="checkmark"></span>
                     </label>
@@ -209,7 +224,9 @@ function App() {
               <div className="settings-row">
                 <button
                   className="settings-row__item"
-                  onClick={() => setStartDate(new Date())}
+                  onClick={() =>
+                    setSettings({ ...settings, startDate: new Date() })
+                  }
                 >
                   Jetzt
                 </button>
@@ -219,7 +236,7 @@ function App() {
                   name="meeting-time"
                   className="settings-row__item"
                   ref={dateRef}
-                  defaultValue={startDate.toISOString().slice(0, 16)}
+                  defaultValue={settings.startDate.toISOString().slice(0, 16)}
                   min={new Date(eventsRaw[0].start).toISOString().slice(0, 16)}
                   max={new Date(eventsRaw[eventsRaw.length - 1].start)
                     .toISOString()
@@ -227,7 +244,12 @@ function App() {
                 ></input>
                 <button
                   className="settings-row__item"
-                  onClick={() => setStartDate(new Date(dateRef.current.value))}
+                  onClick={() =>
+                    setSettings({
+                      ...settings,
+                      startDate: new Date(dateRef.current.value),
+                    })
+                  }
                 >
                   OK
                 </button>
@@ -238,36 +260,43 @@ function App() {
               <div className="settings-row">
                 <button
                   className={
-                    "settings-row__item" + (sortType == "NAME" ? " active" : "")
+                    "settings-row__item" +
+                    (settings.sortType == "NAME" ? " active" : "")
                   }
-                  onClick={() => setSortType("NAME")}
+                  onClick={() => setSettings({ ...settings, sortType: "NAME" })}
                 >
                   Name
                 </button>
                 <button
                   className={
                     "settings-row__item" +
-                    (sortType == "START" ? " active" : "")
+                    (settings.sortType == "START" ? " active" : "")
                   }
-                  onClick={() => setSortType("START")}
+                  onClick={() =>
+                    setSettings({ ...settings, sortType: "START" })
+                  }
                 >
                   Start
                 </button>
                 <button
                   className={
                     "settings-row__item" +
-                    (sortType == "GENRE" ? " active" : "")
+                    (settings.sortType == "GENRE" ? " active" : "")
                   }
-                  onClick={() => setSortType("GENRE")}
+                  onClick={() =>
+                    setSettings({ ...settings, sortType: "GENRE" })
+                  }
                 >
                   Genre
                 </button>
                 <button
                   className={
                     "settings-row__item" +
-                    (sortType == "STAGE" ? " active" : "")
+                    (settings.sortType == "STAGE" ? " active" : "")
                   }
-                  onClick={() => setSortType("STAGE")}
+                  onClick={() =>
+                    setSettings({ ...settings, sortType: "STAGE" })
+                  }
                 >
                   Bühne
                 </button>
@@ -281,7 +310,7 @@ function App() {
                   className="header__search settings-row__item"
                   placeholder="Search"
                   onChange={(e) => {
-                    setSearchKeyword(e.target.value);
+                    setSettings({ ...settings, searchKeyword: e.target.value });
                   }}
                 />
               </div>
@@ -289,44 +318,17 @@ function App() {
           </div>
         </header>
         <ul className="eventlist container">
-          {events.map((event) => {
-            let start = new Date(event.start);
-            let end = new Date(event.end);
-
-            return (
-              <li className="event" key={event.id}>
-                <div className="event__header">
-                  <div className="event__date">
-                    {start.toLocaleDateString([], {
-                      weekday: "short",
-                    })}
-                  </div>
-                  <div className="event__time">
-                    {start.toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}{" "}
-                    -{" "}
-                    {end.toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}{" "}
-                    Uhr
-                  </div>
-                  <h2 className="event__title">{event.title}</h2>
-                  <span className="event__genre">
-                    <MusicIcon /> {event.genre}
-                  </span>
-                  <span className="event__location">
-                    <MarkerIcon /> {event.location}
-                  </span>
-                  <span className="event__description">
-                    {event.description.slice(0, 250) + "..."}
-                  </span>
-                </div>
-              </li>
-            );
-          })}
+          {events.map((event) => (
+            <ListItem
+              id={event.id}
+              start={event.start}
+              end={event.end}
+              title={event.title}
+              genre={event.genre}
+              location={event.location}
+              description={event.description}
+            ></ListItem>
+          ))}
         </ul>
       </div>
     );
