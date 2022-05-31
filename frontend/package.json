@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@iconify/json": "^2.1.50",
+    "@preact/preset-vite": "^2.2.0",
     "@svgr/core": "^6.2.1",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
