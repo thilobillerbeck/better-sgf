@@ -144,7 +144,11 @@ function App() {
   }, [settings]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="info-fullscreen">
+        <span>Loading...</span>
+      </div>
+    );
   } else {
     return (
       <div className="App">
