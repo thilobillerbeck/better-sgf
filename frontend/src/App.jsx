@@ -146,7 +146,7 @@ function App() {
   if (loading) {
     return (
       <div className="info-fullscreen">
-        <span>Loading...</span>
+        <span>Fast fertig...</span>
       </div>
     );
   } else {
