@@ -126,9 +126,10 @@ function App() {
 
     e = e.filter((event) => {
       return (
-        settings.selectedStages.includes(event.location) &&
-        settings.selectedGenres.includes(event.genre) &&
-        new Date(event.start) >= settings.startDate
+        (settings.selectedStages.includes(event.location) &&
+          settings.selectedGenres.includes(event.genre) &&
+          new Date(event.start) >= settings.startDate) ||
+        new Date(event.end) >= settings.startDate
       );
     });
 
@@ -224,7 +225,7 @@ function App() {
               </div>
             </div>
             <div className="settings-container">
-              <span className="settings-title">Startdatum</span>
+              <span className="settings-title">Zeit</span>
               <div className="settings-row">
                 <button
                   className="settings-row__item"
