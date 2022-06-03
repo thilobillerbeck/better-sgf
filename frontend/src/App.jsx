@@ -125,11 +125,14 @@ function App() {
     }
 
     e = e.filter((event) => {
+      let isInTime =
+        new Date(event.start) >= settings.startDate ||
+        new Date(event.end) >= settings.startDate;
+
       return (
-        (settings.selectedStages.includes(event.location) &&
-          settings.selectedGenres.includes(event.genre) &&
-          new Date(event.start) >= settings.startDate) ||
-        new Date(event.end) >= settings.startDate
+        settings.selectedStages.includes(event.location) &&
+        settings.selectedGenres.includes(event.genre) &&
+        isInTime
       );
     });
 
