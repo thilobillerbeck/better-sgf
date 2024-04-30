@@ -72,7 +72,7 @@ func main() {
 
 			dayAdd := 0
 
-			if startRaw.Hour() < 12 {
+			if startRaw.Hour() < 6 {
 				dayAdd = 1
 			}
 
