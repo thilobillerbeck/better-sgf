@@ -62,7 +62,16 @@ function App() {
           return { id: stage, name: stage };
         });
 
-        db.events.bulkPut(data.events);
+        data.events.forEach((event: Event) => {
+          db.events.get(event.id).then((existingEvent) => {
+            if (existingEvent) {
+              db.events.update(event.id, event);
+            } else {
+              db.events.add(event);
+            }
+          });
+        });
+
         db.genres.bulkPut(data.genres);
         db.locations.bulkPut(data.stages);
       });
