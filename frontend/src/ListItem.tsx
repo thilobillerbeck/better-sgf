@@ -1,9 +1,10 @@
 import React from 'react';
 import MusicIcon from "~icons/mdi/music";
 import MarkerIcon from "~icons/mdi/map-marker-radius";
+import { db } from './db';
 
 function ListItem({
-                      id, start, end, title, genre, location, description
+                      id, start, end, title, genre, location, description, favorite
                   }) {
 
     start = new Date(start);

@@ -1,32 +1,33 @@
 import { useState, useEffect, useRef } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
-import {
-  sortEventsByDate,
-  sortEventsByArtistName,
-  sortEventsByGenre,
-  sortEventsByStage,
-} from "./helpers.js";
 import "./App.css";
 import ListItem from "./ListItem.tsx";
 import { Event, Genre, Location, db } from "./db.ts";
 import { useLiveQuery } from "dexie-react-hooks";
 
 function App() {
-  const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
-  const eventsRaw = useLiveQuery(() => db.events.toArray());
-  const genres = useLiveQuery(() => db.genres.toArray());
-  const stages = useLiveQuery(() => db.locations.toArray());
-
+  const firstEvent = useLiveQuery(() => db.events.orderBy("start").first());
+  const lastEvent = useLiveQuery(() => db.events.orderBy("start").last());
   const [settings, setSettings] = useState({
     selectedGenres: [],
     selectedStages: [],
-    sortType: "START",
+    sortType: "start",
     searchKeyword: "",
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate: firstEvent?.start || new Date(),
+    endDate: lastEvent?.start || new Date(),
   });
+  const events = useLiveQuery(() =>
+    db.events.
+      where("start").aboveOrEqual(settings.startDate).
+      filter((event) => settings.selectedGenres.includes(event.genre)).
+      filter((event) => settings.selectedStages.includes(event.location)).
+      filter((event) => event.title.toLowerCase().includes(settings.searchKeyword.toLowerCase())).
+      toArray()
+  , [settings]);
+  const genres = useLiveQuery(() => db.genres.toArray());
+  const stages = useLiveQuery(() => db.locations.toArray());
 
   const dateRef = useRef(null);
   const {
@@ -38,7 +39,7 @@ function App() {
       // eslint-disable-next-line prefer-template
       console.log("SW Registered: " + r);
     },
-    onRegisterError(error) {
+    onRegisterError(error: Error) {
       console.log("SW registration error", error);
     },
   });
@@ -113,45 +114,6 @@ function App() {
   useEffect(() => {
     updateData();
   }, []);
-
-  useEffect(() => {
-    let e = eventsRaw;
-
-    if (settings.searchKeyword.length > 0) {
-      e = eventsRaw.filter((event) => {
-        return (
-          event.title
-            .toLowerCase()
-            .includes(settings.searchKeyword.toLocaleLowerCase()) ||
-          event.description
-            .toLowerCase()
-            .includes(settings.searchKeyword.toLocaleLowerCase())
-        );
-      });
-    }
-
-    e = e.filter((event) => {
-      let isInTime =
-        new Date(event.start) >= settings.startDate ||
-        new Date(event.end) >= settings.startDate;
-
-      return (
-        settings.selectedStages.includes(event.location) &&
-        settings.selectedGenres.includes(event.genre) &&
-        isInTime
-      );
-    });
-
-    if (settings.sortType === "START") {
-      setEvents(sortEventsByDate(e));
-    } else if (settings.sortType === "GENRE") {
-      setEvents(sortEventsByGenre(e));
-    } else if (settings.sortType === "STAGE") {
-      setEvents(sortEventsByStage(e));
-    } else {
-      setEvents(sortEventsByArtistName(e));
-    }
-  }, [settings]);
 
   if (loading) {
     return (
@@ -251,8 +213,8 @@ function App() {
                   className="settings-row__item"
                   ref={dateRef}
                   defaultValue={settings.startDate.toISOString().slice(0, 16)}
-                  min={new Date(eventsRaw[0].start).toISOString().slice(0, 16)}
-                  max={new Date(eventsRaw[eventsRaw.length - 1].start)
+                  min={firstEvent?.start.toISOString().slice(0, 16)}
+                  max={lastEvent?.start
                     .toISOString()
                     .slice(0, 16)}
                 ></input>
@@ -277,7 +239,7 @@ function App() {
                     "settings-row__item" +
                     (settings.sortType == "NAME" ? " active" : "")
                   }
-                  onClick={() => setSettings({ ...settings, sortType: "NAME" })}
+                  onClick={() => setSettings({ ...settings, sortType: "title" })}
                 >
                   Name
                 </button>
@@ -287,7 +249,7 @@ function App() {
                     (settings.sortType == "START" ? " active" : "")
                   }
                   onClick={() =>
-                    setSettings({ ...settings, sortType: "START" })
+                    setSettings({ ...settings, sortType: "start" })
                   }
                 >
                   Start
@@ -298,7 +260,7 @@ function App() {
                     (settings.sortType == "GENRE" ? " active" : "")
                   }
                   onClick={() =>
-                    setSettings({ ...settings, sortType: "GENRE" })
+                    setSettings({ ...settings, sortType: "genre" })
                   }
                 >
                   Genre
@@ -309,7 +271,7 @@ function App() {
                     (settings.sortType == "STAGE" ? " active" : "")
                   }
                   onClick={() =>
-                    setSettings({ ...settings, sortType: "STAGE" })
+                    setSettings({ ...settings, sortType: "location" })
                   }
                 >
                   Bühne
@@ -341,6 +303,7 @@ function App() {
               genre={event.genre}
               location={event.location}
               description={event.description}
+              favorite={event.favorite}
             ></ListItem>
           ))}
         </ul>
