@@ -8,15 +8,16 @@ import {
 } from "./helpers.js";
 import "./App.css";
 import ListItem from "./ListItem.tsx";
+import { Event, Genre, Location, db } from "./db.ts";
+import { useLiveQuery } from "dexie-react-hooks";
 
 function App() {
-  const [eventsRaw, setEventsRaw] = useState([]);
   const [events, setEvents] = useState([]);
-  const [genres, setGenres] = useState([]);
-  const [stages, setStages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
-  const [endDate, setEndDate] = useState(new Date());
+  const eventsRaw = useLiveQuery(() => db.events.toArray());
+  const genres = useLiveQuery(() => db.genres.toArray());
+  const stages = useLiveQuery(() => db.locations.toArray());
 
   const [settings, setSettings] = useState({
     selectedGenres: [],
@@ -26,7 +27,6 @@ function App() {
     startDate: new Date(),
     endDate: new Date(),
   });
-  const [data, setData] = useState({});
 
   const dateRef = useRef(null);
   const {
@@ -47,9 +47,23 @@ function App() {
     fetch("https://api.better-sgf.de/events.json")
       .then((response) => response.json())
       .then((data) => {
-        localStorage.setItem("data", JSON.stringify(data));
-        localStorage.setItem("data_last-update", Date.now());
-        applyUpdatedData(data);
+        data.events = data.events.map((event: Event) => {
+          event.start = new Date(event.start);
+          event.end = new Date(event.end);
+          return event;
+        })
+
+        data.genres = data.genres.map((genre: Genre) => {
+          return { id: genre.name, name: genre.name };
+        });
+
+        data.stages = data.stages.map((stage: Location) => {
+          return { id: stage, name: stage };
+        });
+
+        db.events.bulkPut(data.events);
+        db.genres.bulkPut(data.genres);
+        db.locations.bulkPut(data.stages);
       });
   }
 
@@ -63,7 +77,7 @@ function App() {
       setSettings({
         ...settings,
         selectedStages: settings.selectedStages.filter(
-          (stage) => stage !== event.target.value
+          (stage: Location) => stage.id !== event.target.value
         ),
       });
     }
@@ -85,26 +99,18 @@ function App() {
     }
   }
 
-  function applyUpdatedData(data) {
-    setEventsRaw(data.events);
-    setGenres(data.genres);
-    setStages(data.stages);
-
-    setSettings({
-      ...settings,
-      selectedGenres: data.genres.map((genre) => genre.name),
-      selectedStages: data.stages,
-    });
-    setLoading(false);
-  }
+  useEffect(() => {
+    if (stages && genres) {
+      setSettings({
+        ...settings,
+        selectedGenres: genres.map((genre) => genre.name),
+        selectedStages: stages.map((stage) => stage.id),
+      });
+      setLoading(false);
+    }
+  }, [genres, stages]);
 
   useEffect(() => {
-    if (localStorage.getItem("data") !== null) {
-      console.log("Loading events from local storage");
-      let data = JSON.parse(localStorage.getItem("data"));
-      applyUpdatedData(data);
-    }
-
     updateData();
   }, []);
 
@@ -182,20 +188,20 @@ function App() {
             <div className="settings-container">
               <span className="settings-title">Genres</span>
               <div className="settings-row">
-                {genres.map((genre) => (
-                  <div key={genre.name} className="settings-row__item">
-                    <label class="checkbox-container" for={genre.name}>
-                      {genre.name}
+                {genres?.map((genre) => (
+                  <div key={genre.id} className="settings-row__item">
+                    <label class="checkbox-container" for={genre.id}>
+                      {genre.id}
                       <input
                         type="checkbox"
-                        id={genre.name}
+                        id={genre.id}
                         name="genres"
-                        value={genre.name}
+                        value={genre.id}
                         onChange={(e) => {
                           handleGenreChanged(e);
                         }}
                         defaultChecked={settings.selectedGenres.includes(
-                          genre.name
+                          genre.id
                         )}
                       ></input>
                       <span class="checkmark"></span>
@@ -207,19 +213,19 @@ function App() {
             <div className="settings-container">
               <span className="settings-title">Bühnen</span>
               <div className="settings-row">
-                {stages.map((stage) => (
-                  <div key={stage} className="settings-row__item">
-                    <label class="checkbox-container" for={stage}>
-                      {stage}
+                {stages.map((stage: Location) => (
+                  <div key={stage.id} className="settings-row__item">
+                    <label class="checkbox-container" for={stage.id}>
+                      {stage.id}
                       <input
                         type="checkbox"
-                        id={stage}
+                        id={stage.id}
                         name="genres"
-                        value={stage}
+                        value={stage.id}
                         onChange={(e) => {
                           handleStageChange(e);
                         }}
-                        defaultChecked={settings.selectedStages.includes(stage)}
+                        defaultChecked={settings.selectedStages.includes(stage.id)}
                       ></input>
                       <span class="checkmark"></span>
                     </label>
