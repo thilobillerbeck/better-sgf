@@ -5,9 +5,9 @@ import {
   sortEventsByArtistName,
   sortEventsByGenre,
   sortEventsByStage,
-} from "./helpers";
+} from "./helpers.js";
 import "./App.css";
-import ListItem from "./ListItem";
+import ListItem from "./ListItem.tsx";
 
 function App() {
   const [eventsRaw, setEventsRaw] = useState([]);
