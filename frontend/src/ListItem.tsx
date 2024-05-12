@@ -11,7 +11,11 @@ function ListItem({
     end = new Date(end);
 
     return (
-        <li className="event" key={id}>
+        <li className="event" key={id} onClick={
+            () => {
+                window.location.href = `/${id}`;
+            }
+        }>
             <div className="event__header">
                 <div className="event__date">
                     {start.toLocaleDateString([], {
@@ -40,6 +44,12 @@ function ListItem({
                 <span className="event__description">
                     {description.slice(0, 250) + "..."}
                   </span>
+                <button
+                    className="event__favorite"
+                    onClick={() => {
+                        db.events.update(id, { favorite: !favorite });
+                    }}
+                >{favorite ? "❤️" : "🤍"}</button>
             </div>
         </li>
     )
