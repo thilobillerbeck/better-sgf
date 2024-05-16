@@ -1,9 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { useRegisterSW } from "virtual:pwa-register/react";
-import "./App.css";
-import ListItem from "./ListItem.tsx";
+import { useEffect } from "react";
 import { Event, Genre, Location, db } from "./db.ts";
-import { useLiveQuery } from "dexie-react-hooks";
 import Router from 'preact-router';
 import Home from "./Home.tsx";
 import Details from "./Details.tsx";
