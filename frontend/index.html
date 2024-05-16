@@ -15,31 +15,8 @@
       name="description"
       content="Eine inoffizielle Companion App für das Schlossgrabenfest"
     />
-    <style lang="css">
-      body {
-        margin: 0;
-        font-family: sans-serif;
-        background-color: #0a0a0a;
-        color: #e8e8e8;
-      }
-
-      .info-fullscreen {
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        position: fixed;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: yellow;
-        font-weight: bold;
-        font-size: 1.5rem;
-        text-align: center;
-      }
-    </style>
   </head>
-  <body>
+  <body class="bg-gray-950 text-gray-50">
     <noscript class="info-fullscreen"
       ><span>
         Scheinbar ist in deinem Browser Javascript deaktiviert, bitte aktivieren
@@ -49,6 +26,6 @@
     <div id="root">
       <div class="info-fullscreen"><span> Wird geladen... </span></div>
     </div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

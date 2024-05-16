@@ -1,5 +1,5 @@
 import { render } from "preact";
-import App from "./App";
-import "./index.css";
+import App from "./App.tsx";
+import "./style.css";
 
 render(<App />, document.body);
