@@ -304,7 +304,7 @@ export default function Home({ }: Props) {
             ></ListItem>
           ))}
         </ul>
-        <footer className="bg-gray-900 border-t-2 border-t-yellow-700 fixed bottom-0 left-0 right-0 p-2 flex justify-between">
+        <footer className="bg-gray-900 border-t-2 border-t-yellow-700 fixed bottom-0 left-0 right-0 p-4 flex justify-between">
           <span>
             &copy; 2024 Thilo Billerbeck
           </span>
