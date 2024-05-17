@@ -308,9 +308,14 @@ export default function Home({ }: Props) {
           <span>
             &copy; 2024 Thilo Billerbeck
           </span>
-          <a href="https://thilo-billerbeck.com/impressum/">
-            Impressum
-          </a>
+          <div className="flex gap-2">
+            <a target="_blank" rel="noreferrer noopener" href="https://github.com/thilobillerbeck/better-sgf/">
+              Source
+            </a>
+            <a target="_blank" rel="noreferrer noopener" href="https://thilo-billerbeck.com/impressum/">
+              Impressum
+            </a>
+          </div>
           </footer>
       </>
     );
