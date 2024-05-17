@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
 import ListItem from "./ListItem.tsx";
-import FilterIcon from "~icons/mdi/filter";
+import FilterIcon from '~icons/mdi/filter';
 import { Event, Genre, Location, db } from "./db.ts";
 import { useLiveQuery } from "dexie-react-hooks";
 type Props = {}
