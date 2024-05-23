@@ -22,7 +22,7 @@ export default function Home({ }: Props) {
   });
   const events = useLiveQuery(() =>
     db.events.
-      where("start").aboveOrEqual(settings.startDate).
+      where("end").aboveOrEqual(settings.startDate).
       filter((event) => settings.selectedGenres.includes(event.genre)).
       filter((event) => settings.selectedStages.includes(event.location)).
       filter((event) => event.title.toLowerCase().includes(settings.searchKeyword.toLowerCase())).
