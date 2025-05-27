@@ -306,7 +306,7 @@ export default function Home({ }: Props) {
         </ul>
         <footer className="bg-gray-900 border-t-2 border-t-yellow-700 fixed bottom-0 left-0 right-0 p-4 flex justify-between">
           <span>
-            &copy; 2024 Thilo Billerbeck
+            &copy; 2025 Thilo Billerbeck
           </span>
           <div className="flex gap-2">
             <a target="_blank" rel="noreferrer noopener" href="https://github.com/thilobillerbeck/better-sgf/">
